@@ -203,5 +203,5 @@ async def stop(ctx):
     await ctx.author.send("Bot stopped/restarted.")
     restart_program()
 
-client.run("ODcxODMyMTIzNjY4MDU4MTMz.YQhC8A.X7hlYKHyVRhxZZrqH5PZQZM3cFE")
+client.run("TOKEN GOES HERE")
 #Bot's Token Code Goes Here
