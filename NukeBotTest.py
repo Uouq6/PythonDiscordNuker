@@ -27,7 +27,6 @@ async def on_ready():
     print('Servers connected to:')
     for guild in client.guilds:
         print(guild.name)
-    await asyncio.sleep(1)
 
 
 @client.event
@@ -62,14 +61,17 @@ async def dm(ctx, message):
      except:
        pass
 
-@client.command(pass_context=True)
-async def clear(ctx, amount=10):
-    channel = ctx.message.channel
-    messages = []
-    async for message in client.logs_from(channel, limit=int(amount)):
-        messages.append(message)
-    await client.delete_messages(messages)
-    await client.say('Messages deleted')
+@client.command(aliases=["Purge", "purge", "Clear"])
+async def clear(ctx, amount=100):
+    # the amount value is the maximum you want to delete, and also the default
+    if ctx.message.author.permissions_in(ctx.message.channel).manage_messages:
+         await ctx.channel.purge(limit=amount + 1)
+         Colors = random.randint(50, 15_000_000)
+         embed = discord.Embed(
+            title=f"Channel has been purged of {amount} of message(s)", colour=Colors)
+         await ctx.send(embed=embed)
+    else:
+        await ctx.send("Bro you don't have the permissions to do this")
 
 @client.command(pass_context=True)
 async def ping(ctx):
@@ -99,18 +101,16 @@ async def kick(ctx, user: discord.Member=None):
     else:
         await client.say('You lack permission to preform this action')
 
-@client.command(pass_context=True)
-async def ban(ctx, user: discord.Member=None):
-    author = ctx.message.author
-    if author.server_permissions.kick_members:
-        if user is None:
-            await client.say('Please input a user.')
-        else:
-            await client.say("Get banned **{}**, Damn kid".format(user.name))
-            await client.ban(user)
-    else:
-        await client.say('You lack permission to preform this action')
-
+@client.command()
+async def ban(ctx, member: discord.Member, *, reason=None):
+    global embed
+    if ctx.message.author.permissions_in(ctx.message.channel).manage_messages:
+        embed = discord.Embed(
+            title="Banned",
+            colour=0x2859B8,
+            description=f"{member.mention} has been Banned. :joy:")
+        await member.ban(reason=reason)
+        await ctx.send(embed=embed)
 
 @client.command(pass_context=True)
 async def invite(ctx):
