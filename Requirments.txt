@@ -1,0 +1,4 @@
+discord.py
+PyPi
+colorama
+discord>=1.7.3
